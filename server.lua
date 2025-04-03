@@ -185,46 +185,36 @@ AddEventHandler('dog:requestPlayerScent', function()
     -- Send the nearby scent trails to the client who requested it
     TriggerClientEvent('dog:receivePlayerScent', playerId, nearbyScentTrails)
 end)
-
 -- Register the scent blocker item with QB-Inventory
-QBCore.Functions.CreateUseableItem(scentBlockItem, function(source)
-    local playerId = source
+if GetResourceState('qb-core') == 'started' then
+    QBCore.Functions.CreateUseableItem(scentBlockItem, function(source)
+        local playerId = source
+        blockedPlayers[playerId] = GetGameTimer() + scentBlockTime
+        QBCore.Functions.Notify(playerId, "You are blocking your scent for 60 seconds.", "success")
+        if Config.printDebug then
+            print("[K9] Player", playerId, "is now blocking their scent for 60 seconds.")
+        end
+        TriggerClientEvent('dog:useScentBlocker', playerId)
+    end)
+end
 
-    -- Add player to blockedPlayers list with the current time plus scentBlockTime
-    blockedPlayers[playerId] = GetGameTimer() + scentBlockTime
-
-    -- Notify the player that they are now blocking scent trails
-    QBCore.Functions.Notify( playerId, "You are blocking your scent for 60 seconds.", "success")
-    if Config.printDebug then
-        print("[K9] Player", playerId, "is now blocking their scent for 60 seconds.")
-    end
-    -- Optional: Trigger client-side effects or notifications
-    TriggerClientEvent('dog:useScentBlocker', playerId)
-end)
-
-GetResourceState('ox_inventory') == 'started' then
+-- Register the scent blocker item with OX Inventory
+if GetResourceState('ox_inventory') == 'started' then
     exports.ox_inventory:CustomUseableItem('scent_blocker', function(source, item, slot)
         local playerId = source
-
-        -- Add player to blockedPlayers list with the current time plus scentBlockTime
         blockedPlayers[playerId] = GetGameTimer() + scentBlockTime
-
-        -- Notify the player
         TriggerClientEvent('ox_lib:notify', playerId, {
             title = "K9 Scent Blocker",
             description = "You are blocking your scent for 60 seconds.",
             type = "success",
             duration = 5000
         })
-
         if Config.printDebug then
             print("[K9] Player", playerId, "is now blocking their scent for 60 seconds.")
         end
-
-        -- Optional: Trigger client-side effects or notifications
         TriggerClientEvent('dog:useScentBlocker', playerId)
     end)
-
+end
 
 -- Clean up old scent trails every minute
 CreateThread(function()
