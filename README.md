@@ -4,7 +4,11 @@ A realistic scent-tracking system for canine units in FiveM. This script allows 
 
 ---
 ## PREVIEW
-https://github.com/user-attachments/assets/e4fce06d-59e7-438e-8d8e-dcb1c0da83a6
+
+
+https://github.com/user-attachments/assets/b39716cc-91ad-42f0-a63e-227de36a9620
+
+
 ---
 
 ## 🚔 Features
