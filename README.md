@@ -10,6 +10,11 @@ https://github.com/user-attachments/assets/b39716cc-91ad-42f0-a63e-227de36a9620
 
 
 ---
+👨‍💻 Credits
+Developed by Cloutmatic
+For support or questions, contact me on the FiveM forums under Gatorsman98 or Join Our New Discord!
+
+https://discord.gg/RQQyRpg2vB
 
 ## 🚔 Features
 
