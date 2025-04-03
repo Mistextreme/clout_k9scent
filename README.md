@@ -17,7 +17,7 @@ https://github.com/user-attachments/assets/b39716cc-91ad-42f0-a63e-227de36a9620
 - 👃 **K9 Vision Mode** with scent markers and optional visual effects
 - 🧪 **Scent Drop Chance Logic** influenced by contraband (drugs, weapons)
 - 🐾 **Animal Ped Recognition** for authorized tracking
-- ❌ **Scent Blocker Item** support
+- ❌ **Scent Blocker Item**
 - 🧩 **Framework Support**: QBCore
 - 📦 **Inventory Support**: OX Inventory and QB Inventory
 - 🌐 **Sync Logic**: Only players within scent range receive scent data
