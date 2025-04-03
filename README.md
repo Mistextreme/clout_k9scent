@@ -45,3 +45,19 @@ https://github.com/user-attachments/assets/b39716cc-91ad-42f0-a63e-227de36a9620
 
 ## 🐕 Scent Blocking
 This system includes a scent blocker item (scent_blocker) usable via inventory systems to prevent scent drops for 60 seconds. You may customize this item in your inventory resource.
+
+
+## 🛡️ License
+Copyright (c) 2025 CreatorBailey
+
+This script is the intellectual property of the author. You are granted permission to use it under the following conditions:
+
+1. You may use this script on personal or public FiveM servers.
+2. You may NOT redistribute, reupload, or resell this script.
+3. You may NOT modify or republish this script without permission.
+4. You must credit the original author if showcased publicly.
+5. Commercial use (e.g., use in paid servers or server packages) is not allowed without written permission.
+
+By using this script, you agree to these terms.
+
+For custom use cases or commercial licensing, contact me via Discord or the FiveM forums.
