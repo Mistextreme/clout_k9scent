@@ -15,6 +15,7 @@ server_scripts {
     'server.lua'
 }
 
+shared_script 'config.lua' -- shared config for both client and server
 dependencies {
     'qb-core'
 }
