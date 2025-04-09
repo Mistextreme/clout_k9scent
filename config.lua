@@ -1,6 +1,6 @@
 Config = Config or {}
 
-Config.Inventory = "qb" -- Options: "qb" or "ox" (for ox_inventory, ensure you have it installed)
+Config.Inventory = "ox" -- Options: "esx" or "ox" (for ox_inventory, ensure you have it installed)
 Config.printDebug = false -- Set to true to enable debug prints in the server console for troubleshooting
 
 Config.AuthorizedPoliceJobs = {
@@ -42,27 +42,26 @@ Config.Functions = {
     GetInventoryServer = function(source)
         if Config.Inventory == "ox" then
             return exports.ox_inventory:GetInventoryItems(source)
-        elseif Config.Inventory == "qb" then
-            local Player = QBCore.Functions.GetPlayer(source)
-            return Player.PlayerData.items
-        end -- ✅ closes if properly
-    end, -- ✅ closes function
+        elseif Config.Inventory == "esx" then
+            local xPlayer = ESX.GetPlayerFromId(source)
+            return xPlayer.inventory
+        end
+    end,
     
-
     PlayerDataServer = function(source)
-        local PlyData = QBCore.Functions.GetPlayer(source)
-        if not PlyData then return {job = {}} end
-        PlyData = PlyData.PlayerData
+        local xPlayer = ESX.GetPlayerFromId(source)
+        if not xPlayer then return {job = {}} end
+        
         local PlayerData = {
-            identifier = PlyData.citizenid,
-            citizenid = PlyData.citizenid,
-            bloodtype = PlyData.metadata.bloodtype,
-            fingerprint = PlyData.metadata.fingerprint,
-            firstname = PlyData.charinfo.firstname,
-            lastname = PlyData.charinfo.lastname,
-            job = PlyData.job.name,
-            jobgrade = tostring(PlyData.job.grade.level),
-            jobtype = PlyData.job.type,
+            identifier = xPlayer.identifier,
+            citizenid = xPlayer.identifier,
+            bloodtype = xPlayer.get('bloodtype') or "Unknown",
+            fingerprint = xPlayer.get('fingerprint') or "Unknown",
+            firstname = xPlayer.get('firstName') or "Unknown",
+            lastname = xPlayer.get('lastName') or "Unknown",
+            job = xPlayer.job.name,
+            jobgrade = tostring(xPlayer.job.grade),
+            jobtype = "Unknown", -- ESX doesn't have job type by default
         }
         return PlayerData
     end,
@@ -75,17 +74,18 @@ Config.Functions = {
     end,
 
     PlayerDataClient = function()
-        local PlyData = QBCore.Functions.GetPlayerData()
+        local xPlayer = ESX.GetPlayerData()
+        
         local PlayerData = {
-            identifier = PlyData.citizenid,
-            citizenid = PlyData.citizenid,
-            bloodtype = PlyData.metadata.bloodtype,
-            fingerprint = PlyData.metadata.fingerprint,
-            firstname = PlyData.charinfo.firstname,
-            lastname = PlyData.charinfo.lastname,
-            job = PlyData.job.name,
-            jobgrade = tostring(PlyData.job.grade.level),
-            jobtype = PlyData.job.type,
+            identifier = xPlayer.identifier,
+            citizenid = xPlayer.identifier,
+            bloodtype = xPlayer.bloodtype or "Unknown",
+            fingerprint = xPlayer.fingerprint or "Unknown",
+            firstname = xPlayer.firstName or "Unknown",
+            lastname = xPlayer.lastName or "Unknown",
+            job = xPlayer.job.name,
+            jobgrade = tostring(xPlayer.job.grade),
+            jobtype = "Unknown", -- ESX doesn't have job type by default
         }
         return PlayerData
     end,
