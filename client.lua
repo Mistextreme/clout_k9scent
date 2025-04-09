@@ -1,4 +1,4 @@
-QBCore = exports['qb-core']:GetCoreObject()
+local ESX = exports['es_extended']:getSharedObject()
 local scentVisionActive = false
 local playerScentTrail = {} -- Store scent data for each player
 local playerColors = {}
@@ -15,7 +15,7 @@ local scentBlockDuration = 60000 -- 1 minute duration in milliseconds
 local attachedSpheres = {} -- Store references to attached spheres for players
 -- Wait for player data to be loaded
 local function isAuthorizedPolice()
-    local job = QBCore.Functions.GetPlayerData().job.name
+    local job = ESX.GetPlayerData().job.name
     for k, v in pairs(Config.AuthorizedPoliceJobs) do
         if v == job then
             return true
@@ -68,14 +68,14 @@ local function toggleScentVision()
     if scentVisionActive then
         SetTimecycleModifier("MP_Bull_tost")
         SetTimecycleModifierStrength(0.3)
-        QBCore.Functions.Notify("Scent vision activated!", "success")
+        ESX.ShowNotification("Scent vision activated!")
         TriggerServerEvent('dog:requestPlayerScent') -- Request scent trails from all nearby players
         if Config.printDebug then
             print("[K9] Scent vision toggled on.")
         end
     else
         ClearTimecycleModifier()
-        QBCore.Functions.Notify("Scent vision deactivated!", "error")
+        ESX.ShowNotification("Scent vision deactivated!")
         if Config.printDebug then
             print("[K9] Scent vision toggled off.")
         end
@@ -93,12 +93,12 @@ end
 
 local function activateScentBlock()
     isScentBlocked = true
-    QBCore.Functions.Notify("Scent blocker activated. You won't leave any scents for 1 minute.", "success")
+    ESX.ShowNotification("Scent blocker activated. You won't leave any scents for 1 minute.")
 
     -- Disable scent blocking after the duration ends
     SetTimeout(scentBlockDuration, function()
         isScentBlocked = false
-        QBCore.Functions.Notify("Scent blocker deactivated. You are now leaving scents again.", "error")
+        ESX.ShowNotification("Scent blocker deactivated. You are now leaving scents again.")
     end)
 end
 
@@ -156,7 +156,7 @@ RegisterCommand('k9track', function()
     if  isAuthAnimal() then
     toggleScentVision()
     else
-        QBCore.Functions.Notify("Are You An Animal?", "error")
+        ESX.ShowNotification("Are You An Animal?")
     end
 
 end, false)
@@ -165,7 +165,7 @@ end, false)
 RegisterNetEvent('dog:useScentBlocker')
 AddEventHandler('dog:useScentBlocker', function()
     if isScentBlocked then
-        QBCore.Functions.Notify("Scent blocker is already active!", "error")
+        ESX.ShowNotification("Scent blocker is already active!")
         return
     end
 
@@ -274,18 +274,19 @@ end)
 
 -- Fetch player data once it's available
 CreateThread(function()
-    while not QBCore.Functions.GetPlayerData() do
+    while not ESX.GetPlayerData() do
         Wait(1000)
     end
-    playerData = QBCore.Functions.GetPlayerData()
+    playerData = ESX.GetPlayerData()
     if Config.printDebug then
         print("[K9] Player Data Loaded: ", json.encode(playerData))
     end
 end)
 
 
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    local playerData = QBCore.Functions.GetPlayerData()
+RegisterNetEvent('esx:playerLoaded')
+AddEventHandler('esx:playerLoaded', function(xPlayer)
+    playerData = xPlayer
     if playerData and playerData.job then
         if not isAuthorizedPolice() then
             startScentDroppingThread()
