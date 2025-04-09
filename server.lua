@@ -1,4 +1,4 @@
-QBCore = exports['qb-core']:GetCoreObject()
+local ESX = exports['es_extended']:getSharedObject()
 local function processScent(src, playerCoords, stamina)
     TriggerClientEvent('dog:processScentDrop', src, playerCoords, stamina)
 end
@@ -185,12 +185,13 @@ AddEventHandler('dog:requestPlayerScent', function()
     -- Send the nearby scent trails to the client who requested it
     TriggerClientEvent('dog:receivePlayerScent', playerId, nearbyScentTrails)
 end)
--- Register the scent blocker item with QB-Inventory
-if GetResourceState('qb-core') == 'started' then
-    QBCore.Functions.CreateUseableItem(scentBlockItem, function(source)
+-- Register the scent blocker item with ESX
+if GetResourceState('es_extended') == 'started' then
+    ESX.RegisterUsableItem(scentBlockItem, function(source)
         local playerId = source
         blockedPlayers[playerId] = GetGameTimer() + scentBlockTime
-        QBCore.Functions.Notify(playerId, "You are blocking your scent for 60 seconds.", "success")
+        local xPlayer = ESX.GetPlayerFromId(playerId)
+        xPlayer.showNotification("You are blocking your scent for 60 seconds.")
         if Config.printDebug then
             print("[K9] Player", playerId, "is now blocking their scent for 60 seconds.")
         end
@@ -238,7 +239,10 @@ CreateThread(function()
                 if Config.printDebug then
                     print("[K9] Scent blocking expired for player:", playerId)
                 end
-                QBCore.Functions.Notify( playerId, "Your scent blocking has ended.", "info")
+                local xPlayer = ESX.GetPlayerFromId(playerId)
+                if xPlayer then
+                    xPlayer.showNotification("Your scent blocking has ended.")
+                end
             end
         end
     end
